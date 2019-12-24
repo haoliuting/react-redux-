@@ -1,0 +1,21 @@
+{
+  "app":{
+    "isFetching": false,
+  	"error": "",
+  },
+  "posts":{
+    "byId": {
+      "1": {
+        ...
+      },
+      ...
+    },
+    "allIds": [1, ...],
+  } 
+  "comments": {
+    ...
+  },
+  "authors": {
+    ...
+  }
+}

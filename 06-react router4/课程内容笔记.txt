@@ -1,0 +1,16 @@
+1.客户端路由 和服务端路由
+    主要解释了MPA 和SPA的区别
+2.Router 的相关库
+    引出了react-router-dom ,介绍了Router的两种模式，以及区别。
+    介绍了路由的基本配置
+3.路由配置 
+    介绍了path match 
+4.路由匹配
+    介绍了路由匹配规则 
+        exact switch 
+5.路由组件渲染方式 
+    component 
+    render 
+    children 
+6.react-router4全新思维方式 
+    主要介绍了：一切皆组件 离散式声明方式

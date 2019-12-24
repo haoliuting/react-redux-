@@ -1,0 +1,14 @@
+{
+  "isFetching": false,
+  "error": "",
+  "posts": {
+    ...
+  },
+  "postIds": [1, ...],
+  "comments": {
+    ...
+  },
+  "authors": {
+    ...
+  }
+}

@@ -1,0 +1,72 @@
+1.redux项目结构
+    通过类型划分 
+    通过功能划分
+    通过duck划分  ** 
+2.state 设计原则
+    不能通过API设计，因为这样设计出来的数据重复 结构重复 不方便查询 遍历过多 
+    不能通过UI设计，因为这样设计出来的数据重复更多 
+    应该像设计数据库一样设计，使用key/value形式，不能有重复的列 ，但是通过这种方式设计出来的是无序的，
+所以可以借助数组实现有序。
+    设计state 还应该由包含UI状态的state,如果这样的UI状态过多，可以采用节点合并设计。
+
+3.selector 函数 
+    就是在将state数据传递给容器型组件时，单独一个文件统一处理 本质类似vuex 里面的getters 
+    实现组件层和状态层之间的解耦 
+
+4.前端状态的思想 
+    看xmind
+5.middieware 
+    加强dispatch 的功能 ，最后需要在index.js 添加到createStore 里面。
+    middieware是一种更抽象的enhancer 
+6.enhancer
+    用来加强store的功能，最后需要在index.js 添加到createStore 里面。
+    一般不建议使用。因为可能会改写store底层逻辑。
+7.immutable 
+    由于每一次reducer返回的state是由原来的state拷贝的。
+    如果state 层级较深的话，那么使用es6的解构和Object.assign是不方便实现state的拷贝的。
+    所以需要使用不可变类型，但是不可变类型的遍历是需要递归的，效率比较低。
+    immutable实现了简单操作不可变类型，还可以高效处理遍历问题。
+
+    Map List  fromJS toJS 
+
+    注意：字符串本身就是不可变类型 
+
+    fromJS可以将一个可变类型转换为不可变类型，
+    但是组件不能直接使用不可变类型数据，所以传递给组件时，
+    需要使用toJS将不可变类型转化为可变类型使用。
+
+
+    但是：由于state发生改变，就会转化一次，所以在容器型组件里面使用的state会认为发生了改变
+    继而重新渲染页面，为了解决这个问题，有2种方式：
+    1.在组件里面toJS 
+        如果采用这种方式的话，那么组件里面使用第三方库，如果我们这个展示型组件在其他项目中使用，那么也需要这个第三方库
+    但是展示性组件应该对第三方库是无感知的，所以不建议这种方式
+    2.使用高阶组件 
+        本质就是封装了一个函数，
+        import {Iterable} from 'immutable'
+        const toJS=>WrapComponent (传递进来的组件)=>componentProps(组件上面的props属性)=>{
+            const KEY=0;
+            const VALUE=1;
+            const newProps=Object.entries(props).reduce((newProps,props)=>{
+                newProps[props[KEY]]=Iterable.isIterable(props[KEY])?props[KEY].toJS:props[KEY];
+            },{})
+            return <WrapComponent {...newProps} />
+        }
+        而且使用高阶组件，reducer合并就需要使用 redux-immutable 里面的combineReducers,而不是redux里面的combineReducers
+9.reselector 
+    主要是为了减少state的计算量 优化selector 
+    语法：
+        import {createReselector} from 'reselector'
+
+        const getFilter=state=>state.filter 
+        const getTodos=state=>state.todos.data ;
+        const getShowTodos=createReselector(
+            [getFilter,getTodos],
+            (filter,todos)=>{
+                //filter就是第一个函数返回的结果，todos就是第二个函数返回的结果，以此类推
+                //书写你需要的逻辑
+            }
+        )
+
+
+

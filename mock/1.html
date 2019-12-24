@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<input type="text" id="J_BankCard"/>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    !function () {
+        $('#J_BankCard').on('input',function(e){
+            e.preventDefault()
+            var s=this.selectionStart;
+            var $this = $(this),
+                v = $this.val();
+            /\S{5}/.test(v) && $this.val(v.replace(/\s/g,'').replace(/(.{4})/g, "$1 "));
+            this.selectionStart=this.selectionEnd=s;
+            
+        });
+    }();
+</script>
+</body>
+</html>

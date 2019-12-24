@@ -1,0 +1,80 @@
+1.actions 放所有的actions  定义每一个actons使用的对象，必须包含type,其他为参数
+    写成：
+        export const addTodo=text=>({
+            type:"ADD_TODO",
+            text
+        })
+2.定义一个actionsType文件，用来存放所有的actions的type,便于actions和reducer使用
+    eg：
+        export const ADD_TODO="ADD_TODO"
+3.定义reducer文件,文件划分根据状态进行划分，基本一个状态对应一个reducer,然后使用combineReducers模块
+合并所有的reducer.
+    eg：filter的reducer 
+        import {SET_FILTER } from '../actions/ActionType'
+        const filter=(state="all",action)=>{
+            switch(action.type){
+                case SET_FILTER:
+                    return action.filter;
+                default:
+                    return state;
+            }
+        }
+        export default filter;
+
+    eg：合并文件书写方式
+        import {combineReducers} from 'redux'
+        import filter from './filter'
+        import text from './text'
+        import todos from './todos'
+
+        const rootReducer=combineReducers({
+            filter,
+            text,
+            todos
+        })
+        export default rootReducer;
+4.组件分为展示类组件和容器类组件
+    展示类组件就是原本的组件：属性和方法均在props属性上
+    容器类组件式通过react-redux创建的，其中需要使用react-redux connect模块讲状态层和展示性组件进行连接。
+    eg:
+    import {connect} from 'react-redux'
+    import Footer from './Footer'
+
+    //引入之前定义的actions
+    import {setFilter} from './actions
+
+    //mapStateToProps 用来给props导出属性 注意：返回值是一个对象
+    const mapStateToProps=state=>({
+        filter:state.filter
+    })
+    //mapDispatchToProps 用来给props导出方法 注意：返回值是一个对象
+    const mapDispatchToProps=dispatch=>{
+        setFilter:filter=>dispatch(setFilter(filter))
+    }
+    export default connect(mapStateToProps,mapDispatchToProps)(Footer)
+
+5.在src/index.js 
+    import {createStore} from 'redux'
+    import reducer from './reducer'
+    import {provider} from 'react-redux'
+    const store=createStore(reducer)
+
+    ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+6.实现actions异步
+    1.定义fetchTodoRequest fetchTodoSuccess fetchTodoFailure三个action 
+    2.定义fetchTodo 实现调用前面三个action
+    3.修改reducer里面的todos.js ,新增处理fetchTodoRequest fetchTodoSuccess fetchTodoFailure的reducer
+    4.注意：state里面的数据取得是combineReducers里面定义的名字
+        eg:
+            combineReducers({
+                todos,
+                filter,
+                text:""
+            })
+            todos里面的state={a:10,b:20}
+
+            取todos里面的a,需要使用state.todos.a
+    
+
+
